@@ -1,50 +1,71 @@
-name: AURA Daily Run
+from config.universe import NIFTY_SYMBOLS
 
-on:
+from data.market_data import get_prices
 
-  schedule:
-    - cron: '00 1 * * *'
+from analysis.scoring import calculate_score
 
-  workflow_dispatch:
-
-
-jobs:
-
-  aura:
-
-    runs-on: ubuntu-latest
+from database.supabase_client import save_signal
 
 
-    steps:
 
-      - name: Checkout code
-        uses: actions/checkout@v4
+def run():
 
-
-      - name: Setup Python
-        uses: actions/setup-python@v5
-
-        with:
-          python-version: "3.11"
+    results=[]
 
 
-      - name: Install packages
-        run:
-
-          pip install -r requirements.txt
+    for symbol in NIFTY_SYMBOLS:
 
 
-      - name: Run AURA
-
-        env:
-
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-
-          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
-
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        data = get_prices(symbol)
 
 
-        run:
+        if data is not None:
 
-          PYTHONPATH=. python automation/daily_run.py
+
+            score = calculate_score(data)
+
+
+            decision = "WATCH"
+
+
+            if score >= 75:
+                decision = "BUY"
+
+
+            elif score < 25:
+                decision = "AVOID"
+
+
+
+            record = {
+
+                "symbol": symbol,
+
+                "score": score,
+
+                "decision": decision,
+
+                "price": float(
+                    data.iloc[-1]["Close"]
+                ),
+
+                "reason":
+                "Technical analysis score"
+
+            }
+
+
+            save_signal(record)
+
+
+            results.append(record)
+
+
+
+    print(results)
+
+
+
+if __name__ == "__main__":
+
+    run()
