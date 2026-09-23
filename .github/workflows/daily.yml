@@ -47,4 +47,4 @@ jobs:
 
         run:
 
-          python automation/daily_run.py
+          PYTHONPATH=. python automation/daily_run.py
