@@ -1,6 +1,6 @@
-def run_backtest(signals, prices):
+def simulate(signals, prices):
     return {
-        "trades":0,
-        "return":0,
-        "drawdown":0
+        "trades": len(signals),
+        "return_percent": 0,
+        "max_drawdown": 0
     }

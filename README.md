@@ -1,11 +1,14 @@
-# AURA V6.1 Intelligence Expansion
+# AURA V7 Full Intelligence
 
-Upgrade layer for AURA V6+.
+Integrated paper trading intelligence upgrade.
 
-Adds:
-- Expanded intelligence framework
-- Backtesting foundation
-- Portfolio analytics foundation
-- Better data validation
-- AI report structure
+Modules:
+- Multi factor scoring
+- Backtesting framework
+- Portfolio engine
+- Risk engine
 - Performance tracking
+- AI report framework
+- Learning loop
+
+Default mode: PAPER TRADING

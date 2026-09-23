@@ -1,5 +1,2 @@
-def generate(signal):
-    return {
-        "summary": "AURA analysis report generated",
-        "signal": signal
-    }
+def create_report(data):
+    return f"AURA Intelligence Report: {data}"

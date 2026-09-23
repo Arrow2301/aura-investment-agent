@@ -1,6 +1,5 @@
 import streamlit as st
 
-st.title("AURA V6+ Dashboard")
+st.title("AURA V7 Intelligence Dashboard")
 
-st.write("Hybrid investment intelligence platform")
-st.write("Paper trading mode enabled")
+st.write("Portfolio, signals, backtesting and learning")
