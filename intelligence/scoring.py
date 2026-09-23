@@ -1,20 +1,22 @@
-def calculate(technical, momentum, risk, regime, quality):
-    score = (
-        technical * 0.30 +
-        momentum * 0.20 +
-        risk * 0.15 +
-        regime * 0.15 +
-        quality * 0.20
-    )
+def calculate(features):
+    weights = {
+        "technical":0.30,
+        "momentum":0.20,
+        "quality":0.20,
+        "risk":0.15,
+        "regime":0.15
+    }
+
+    score = sum(features.get(k,0)*v for k,v in weights.items())
 
     if score >= 75:
-        action = "BUY_CANDIDATE"
+        action="BUY_CANDIDATE"
     elif score >= 50:
-        action = "WATCH"
+        action="WATCH"
     else:
-        action = "AVOID"
+        action="AVOID"
 
     return {
-        "score": score,
-        "action": action
+        "score":round(score,2),
+        "action":action
     }

@@ -1,6 +1,6 @@
-def run(signals,prices):
+def run(history):
     return {
-        "signals":len(signals),
-        "return":0,
+        "trades":len(history),
+        "win_rate":0,
         "drawdown":0
     }

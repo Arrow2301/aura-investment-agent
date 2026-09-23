@@ -1,17 +1,19 @@
-from market.universe import SYMBOLS
-from intelligence.engine import score,action
+from intelligence.scoring import calculate
+from intelligence.explainer import explain
 
 def run():
-    for symbol in SYMBOLS:
-        result=score({
-            "technical":70,
-            "quality":60,
-            "momentum":65,
-            "risk":70,
-            "regime":60
-        })
+    features={
+        "technical":70,
+        "momentum":65,
+        "quality":60,
+        "risk":75,
+        "regime":65
+    }
 
-        print(symbol,result,action(result))
+    result=calculate(features)
+
+    print(result)
+    print(explain(features))
 
 if __name__=="__main__":
     run()

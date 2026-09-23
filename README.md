@@ -1,18 +1,12 @@
-# AURA V9 Complete Autonomous Investment Research Platform
+# AURA V10 Intelligence Command
 
-Integrated upgrade.
-
-Modules:
-- Production architecture
-- Data validation
-- Multi-factor intelligence
-- Portfolio simulation
-- Risk management
+Upgrade layer focused on:
+- Live multi-factor scoring
+- Explainable signals
+- Memory and learning
+- Portfolio intelligence
 - Backtesting framework
-- Performance tracking
-- Learning loop
-- Dashboard foundation
-- Automation
+- Dashboard command center
 
-Mode:
-PAPER TRADING ONLY
+Default mode:
+PAPER TRADING
