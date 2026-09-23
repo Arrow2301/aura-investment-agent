@@ -1,4 +1,4 @@
-name: AURA V5 Daily
+name: AURA India Production Daily
 
 on:
   workflow_dispatch:
