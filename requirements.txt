@@ -1,9 +1,10 @@
-yfinance
 pandas
 numpy
+yfinance
 ta
 streamlit
-scikit-learn
-python-dotenv
-pytest
 supabase
+python-dotenv
+plotly
+scikit-learn
+pytest

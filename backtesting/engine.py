@@ -1,6 +1,2 @@
-def run(trades):
-    return {
-        "trades":len(trades),
-        "drawdown":0,
-        "win_rate":0
-    }
+def run(data):
+    return {'cagr':0,'sharpe':0,'drawdown':0}

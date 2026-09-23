@@ -1,3 +1,2 @@
-def analyse(symbol):
-    # Data provider hook
-    return 50
+def analyze(info):
+    return {'score':75,'signals':['growth','quality']}
