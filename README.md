@@ -1,17 +1,22 @@
-# AURA V6 All Modules Build
+# AURA V6+ Complete
 
-Integrated hybrid investment research and paper trading framework.
+Hybrid investment research and paper trading platform.
 
-Modules:
-- Market data
+Features:
+- Market data pipeline
 - Technical intelligence
 - Fundamental framework
 - Sentiment framework
 - Market regime
 - Decision engine
-- Risk manager
 - Core/Swing/Tactical paper portfolios
-- Trade journal
+- Risk management
 - Learning memory
 - Dashboard foundation
-- Automation
+- Cloud automation
+
+Deployment:
+GitHub Actions + Supabase + Streamlit
+
+Default:
+Paper trading mode enabled.

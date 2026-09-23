@@ -1,19 +1,21 @@
 from market.universe import SYMBOLS
-from market.data import get
-from intelligence.technical import score as technical
-from intelligence.fundamental import score as fundamental
-from intelligence.sentiment import score as sentiment
+from market.data import fetch
+from intelligence.technical import analyse as technical
+from intelligence.fundamental import analyse as fundamental
+from intelligence.sentiment import analyse as sentiment
 from decision.engine import decide
 
 def run():
-    for s in SYMBOLS:
-        data=get(s)
-        result=decide(
-            technical(data),
-            fundamental(s),
-            sentiment(s)
-        )
-        print(s,result)
+    for symbol in SYMBOLS:
+        data = fetch(symbol)
 
-if __name__=='__main__':
+        result = decide(
+            technical(data),
+            fundamental(symbol),
+            sentiment(symbol)
+        )
+
+        print(symbol, result)
+
+if __name__ == "__main__":
     run()

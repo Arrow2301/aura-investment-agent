@@ -1,4 +1,4 @@
 import yfinance as yf
 
-def get(symbol):
-    return yf.download(symbol, period='2y', progress=False)
+def fetch(symbol):
+    return yf.download(symbol, period="2y", progress=False)
