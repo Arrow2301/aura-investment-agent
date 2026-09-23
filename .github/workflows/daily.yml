@@ -40,18 +40,24 @@ def run():
             record = {
 
                 "symbol": symbol,
-
-                "score": score,
-
-                "decision": decision,
-
-                "price": float(
-                    data.iloc[-1]["Close"]
+            
+                "date": str(
+                    data.iloc[-1]["Date"]
                 ),
-
+            
+                "technical_score": score,
+            
+                "fundamental_score": 0,
+            
+                "sentiment_score": 0,
+            
+                "overall_score": score,
+            
+                "decision": decision,
+            
                 "reason":
                 "Technical analysis score"
-
+            
             }
 
 
