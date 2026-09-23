@@ -1,20 +1,17 @@
-# AURA V5 FULL
+# AURA V6 All Modules Build
 
-Hybrid autonomous investment research and paper trading platform.
+Integrated hybrid investment research and paper trading framework.
 
-Architecture:
-- Market data layer
-- Universe manager
-- Technical analysis
-- Fundamental analysis framework
+Modules:
+- Market data
+- Technical intelligence
+- Fundamental framework
+- Sentiment framework
+- Market regime
 - Decision engine
+- Risk manager
 - Core/Swing/Tactical paper portfolios
+- Trade journal
 - Learning memory
-- Dashboard
-- Cloud automation
-
-Deployment:
-GitHub Actions + Supabase + Streamlit
-
-Important:
-This system is for research and paper trading. It does not guarantee profits.
+- Dashboard foundation
+- Automation

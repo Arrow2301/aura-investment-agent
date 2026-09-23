@@ -1,14 +1,11 @@
-def decide(technical, fundamental, sentiment):
-    score=(technical+fundamental+sentiment)/3
-
-    if score>=75:
-        action="BUY_CANDIDATE"
-    elif score>=50:
-        action="WATCH"
-    else:
-        action="AVOID"
-
+def decide(t,f,s):
+    total=(t+f+s)/3
+    action='AVOID'
+    if total>=75:
+        action='BUY_CANDIDATE'
+    elif total>=50:
+        action='WATCH'
     return {
-        "score":score,
-        "action":action
+        'score':total,
+        'action':action
     }

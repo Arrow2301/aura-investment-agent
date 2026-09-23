@@ -1,2 +1,2 @@
-def analyse(symbol):
+def score(symbol):
     return 50

@@ -1,17 +1,19 @@
-from universe.nse import SYMBOLS
-from data.market import fetch
-from intelligence.technical import analyse
-from intelligence.fundamental import analyse as fundamental
-from intelligence.sentiment import analyse as sentiment
+from market.universe import SYMBOLS
+from market.data import get
+from intelligence.technical import score as technical
+from intelligence.fundamental import score as fundamental
+from intelligence.sentiment import score as sentiment
 from decision.engine import decide
 
 def run():
-    for symbol in SYMBOLS:
-        data=fetch(symbol)
-        t=analyse(data)
-        f=fundamental(symbol)
-        s=sentiment(symbol)
-        print(symbol, decide(t,f,s))
+    for s in SYMBOLS:
+        data=get(s)
+        result=decide(
+            technical(data),
+            fundamental(s),
+            sentiment(s)
+        )
+        print(s,result)
 
-if __name__=="__main__":
+if __name__=='__main__':
     run()

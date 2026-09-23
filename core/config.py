@@ -1,7 +1,7 @@
-INITIAL_CAPITAL = 1000000
+CAPITAL = 1000000
 
-PORTFOLIOS = {
-    "core": 0.60,
-    "swing": 0.30,
-    "tactical": 0.10
+ALLOCATIONS = {
+'core':0.60,
+'swing':0.30,
+'tactical':0.10
 }

@@ -1,6 +1,5 @@
-def store(prediction,outcome,lesson):
+def learn(prediction,outcome):
     return {
-        "prediction":prediction,
-        "outcome":outcome,
-        "lesson":lesson
+    'prediction':prediction,
+    'outcome':outcome
     }
