@@ -1,15 +1,7 @@
-from intelligence.scoring import calculate
-
+from market.universe import SYMBOLS
+from market.data import fetch
+from intelligence.engine import score
 def run():
-    result = calculate(
-        technical=70,
-        momentum=60,
-        risk=80,
-        regime=60,
-        quality=70
-    )
-
-    print(result)
-
-if __name__ == "__main__":
-    run()
+    for s in SYMBOLS:
+        print(s,score({'trend':60,'momentum':70,'quality':65}))
+if __name__=='__main__': run()

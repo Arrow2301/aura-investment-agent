@@ -1,6 +1,2 @@
-def simulate(signals, prices):
-    return {
-        "trades": len(signals),
-        "return_percent": 0,
-        "max_drawdown": 0
-    }
+def run(history):
+    return {'return':0,'drawdown':0}

@@ -2,8 +2,8 @@ pandas
 numpy
 yfinance
 ta
-supabase
-python-dotenv
 streamlit
 plotly
+supabase
+python-dotenv
 scikit-learn

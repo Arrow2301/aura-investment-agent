@@ -1,5 +1,3 @@
 import streamlit as st
-
-st.title("AURA V7 Intelligence Dashboard")
-
-st.write("Portfolio, signals, backtesting and learning")
+st.title('AURA V8 Dashboard')
+st.write('Signals | Portfolio | Risk | Learning')

@@ -1,14 +1,3 @@
-# AURA V7 Full Intelligence
-
-Integrated paper trading intelligence upgrade.
-
-Modules:
-- Multi factor scoring
-- Backtesting framework
-- Portfolio engine
-- Risk engine
-- Performance tracking
-- AI report framework
-- Learning loop
-
-Default mode: PAPER TRADING
+# AURA V8 Production All-in-One
+Integrated cloud-first paper trading platform foundation.
+Modules: data, intelligence, portfolio, risk, backtest, dashboard, reports, learning, automation.

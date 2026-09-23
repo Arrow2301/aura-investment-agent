@@ -1,5 +1,2 @@
-def evaluate(prediction, outcome):
-    return {
-        "prediction": prediction,
-        "outcome": outcome
-    }
+def learn(prediction,outcome):
+    return {'prediction':prediction,'outcome':outcome}
