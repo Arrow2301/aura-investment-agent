@@ -1,20 +1,17 @@
-# AURA V2 - Autonomous Research & Investment Agent
+# AURA V2.1 Clean Deployment Build
 
-A cloud-first personal investment research and paper trading platform.
+Cloud-first personal investment research and paper trading system.
 
-## Included modules
-- Multi-provider AI abstraction
-- Market data engine
-- Technical scoring
-- Fundamental analysis framework
-- Paper trading engine
-- Risk management
-- Learning journal
-- Streamlit dashboard
-- GitHub Actions automation
+Deployment:
+GitHub Actions + Supabase + Streamlit
 
-## Deployment model
-GitHub Actions + Supabase + Streamlit Cloud
+Steps:
+1. Upload repository contents to GitHub.
+2. Run database/schema.sql in Supabase SQL editor.
+3. Add GitHub secrets:
+   SUPABASE_URL
+   SUPABASE_ANON_KEY
+   GEMINI_API_KEY (optional)
+4. Run GitHub Action manually.
 
-## Important
-This version is designed for paper trading and research. Real money execution is intentionally not included.
+This build is for research and paper trading.

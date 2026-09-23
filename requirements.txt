@@ -5,8 +5,5 @@ python-dotenv
 supabase
 streamlit
 plotly
-ta
-requests
 google-generativeai
 openai
-scikit-learn
