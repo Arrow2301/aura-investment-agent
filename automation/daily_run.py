@@ -1,5 +1,11 @@
-import sys, os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+import sys
+import os
+
+sys.path.append(
+    os.path.abspath(
+        os.path.join(os.path.dirname(__file__), "..")
+    )
+)
 
 from data_engine.universe import SYMBOLS
 from data_engine.market_data import get_history
@@ -14,32 +20,65 @@ from intelligence.decision_brain import calculate_aura_score
 from database.supabase_client import save_signal
 
 
-for symbol in SYMBOLS:
+def run():
 
-    print(f"Processing {symbol}")
+    results = []
 
-    history = get_history(symbol)
+    for symbol in SYMBOLS:
 
-    technical = technical_analyze(history)
+        try:
+            print(f"\nProcessing {symbol}")
 
-    fundamentals = get_fundamentals(symbol)
+            history = get_history(symbol)
 
-    fundamental_score = fundamental_analyze(fundamentals)
+            technical = technical_analyze(history)
 
-    quality = quality_analyze(fundamentals)
+            fundamentals = get_fundamentals(symbol)
 
-    risk = risk_analyze(history)
+            fundamental = fundamental_analyze(
+                fundamentals
+            )
 
-    aura = calculate_aura_score(
-        technical,
-        fundamental_score,
-        quality,
-        risk
-    )
+            quality = quality_analyze(
+                fundamentals
+            )
 
-    print(symbol, aura)
+            risk = risk_analyze(
+                history
+            )
 
-    save_signal(
-        symbol,
-        aura
-    )
+            aura = calculate_aura_score(
+                technical,
+                fundamental,
+                quality,
+                risk
+            )
+
+            result = {
+                "symbol": symbol,
+                "technical": technical,
+                "fundamental": fundamental,
+                "quality": quality,
+                "risk": risk,
+                "aura": aura
+            }
+
+            print(result)
+
+            results.append(result)
+
+            save_signal(result)
+
+
+        except Exception as e:
+
+            print(
+                f"Error processing {symbol}: {e}"
+            )
+
+
+    return results
+
+
+if __name__ == "__main__":
+    run()
