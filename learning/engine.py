@@ -1,2 +1,5 @@
-def learn(prediction,outcome):
-    return {'prediction':prediction,'outcome':outcome}
+def update(prediction,actual):
+    return {
+        "prediction":prediction,
+        "actual":actual
+    }

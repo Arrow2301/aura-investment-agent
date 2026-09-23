@@ -1,2 +1,5 @@
 def generate(data):
-    return 'AURA Daily Report'
+    return {
+        "summary":"AURA daily intelligence report",
+        "data":data
+    }

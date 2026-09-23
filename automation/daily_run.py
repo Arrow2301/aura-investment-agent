@@ -1,7 +1,17 @@
 from market.universe import SYMBOLS
-from market.data import fetch
-from intelligence.engine import score
+from intelligence.engine import score,action
+
 def run():
-    for s in SYMBOLS:
-        print(s,score({'trend':60,'momentum':70,'quality':65}))
-if __name__=='__main__': run()
+    for symbol in SYMBOLS:
+        result=score({
+            "technical":70,
+            "quality":60,
+            "momentum":65,
+            "risk":70,
+            "regime":60
+        })
+
+        print(symbol,result,action(result))
+
+if __name__=="__main__":
+    run()

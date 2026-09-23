@@ -1,11 +1,11 @@
-class PaperPortfolio:
+class Portfolio:
 
-    def __init__(self, capital):
-        self.cash = capital
-        self.positions = {}
+    def __init__(self,capital):
+        self.cash=capital
+        self.positions={}
 
-    def buy(self, symbol, qty, price):
-        self.positions[symbol] = {
-            "quantity": qty,
-            "entry": price
+    def buy(self,symbol,qty,price):
+        self.positions[symbol]={
+            "qty":qty,
+            "price":price
         }

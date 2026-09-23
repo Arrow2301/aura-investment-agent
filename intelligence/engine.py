@@ -1,4 +1,14 @@
 def score(features):
-    total=sum(features.values())/len(features)
-    action='BUY_CANDIDATE' if total>=75 else 'WATCH' if total>=50 else 'AVOID'
-    return {'score':total,'action':action}
+    total=0
+
+    for value in features.values():
+        total += value
+
+    return total/len(features)
+
+def action(score):
+    if score>=75:
+        return "BUY_CANDIDATE"
+    elif score>=50:
+        return "WATCH"
+    return "AVOID"

@@ -1,2 +1,6 @@
-def run(history):
-    return {'return':0,'drawdown':0}
+def run(signals,prices):
+    return {
+        "signals":len(signals),
+        "return":0,
+        "drawdown":0
+    }
