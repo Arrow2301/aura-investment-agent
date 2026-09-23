@@ -21,33 +21,28 @@ st.set_page_config(
 st.title("🚀 AURA India Investment Intelligence")
 
 
-# Connect database
+supabase = get_client()
 
-try:
-    supabase = get_client()
 
-    response = (
-        supabase
-        .table("signals")
-        .select("*")
-        .order(
-            "created_at",
-            desc=True
-        )
-        .execute()
+response = (
+    supabase
+    .table("signals")
+    .select("*")
+    .order(
+        "created_at",
+        desc=True
     )
+    .execute()
+)
 
-    data = response.data
 
-except Exception as e:
-    st.error(e)
-    st.stop()
+data = response.data
 
 
 if not data:
 
     st.warning(
-        "No signals available yet. Run AURA daily pipeline first."
+        "No AURA signals available."
     )
 
 else:
@@ -78,7 +73,7 @@ else:
 
 
     st.subheader(
-        "🏆 Top AURA Ranked Stocks"
+        "🏆 Top AURA Opportunities"
     )
 
 
@@ -96,24 +91,12 @@ else:
 
         st.success(
             f"""
-            {row['symbol']}
+{row['symbol']}
 
-            AURA Score: {row['aura_score']}
+AURA Score: {row['aura_score']}
 
-            Action: {row['action']}
+Action: {row['action']}
 
-            Confidence: {row['confidence']}%
-            """
+Confidence: {row['confidence']}%
+"""
         )
-
-
-    st.subheader(
-        "📈 Score Distribution"
-    )
-
-
-    st.bar_chart(
-        df.set_index("symbol")[
-            "aura_score"
-        ]
-    )
