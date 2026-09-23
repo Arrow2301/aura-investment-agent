@@ -1,2 +1,2 @@
-def analyze(index_history):
-    return {'score':70,'regime':'NORMAL'}
+def analyze(index_data=None):
+    return {'score':70,'regime':'SIDEWAYS'}
