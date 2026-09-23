@@ -1,17 +1,21 @@
-# AURA V2.1 Clean Deployment Build
+# AURA V3 Hybrid Autonomous Investment System
 
-Cloud-first personal investment research and paper trading system.
+Hybrid research and paper trading platform.
+
+Modes:
+- Core portfolio (long term)
+- Swing portfolio
+- Tactical portfolio
+
+Features:
+- Technical intelligence
+- Fundamental scoring framework
+- Sentiment/AI layer interface
+- Risk management
+- Paper trading
+- Learning memory
+- Dashboard foundation
+- Cloud automation
 
 Deployment:
 GitHub Actions + Supabase + Streamlit
-
-Steps:
-1. Upload repository contents to GitHub.
-2. Run database/schema.sql in Supabase SQL editor.
-3. Add GitHub secrets:
-   SUPABASE_URL
-   SUPABASE_ANON_KEY
-   GEMINI_API_KEY (optional)
-4. Run GitHub Action manually.
-
-This build is for research and paper trading.

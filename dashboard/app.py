@@ -1,4 +1,5 @@
 import streamlit as st
 
-st.title("AURA V2.1 Dashboard")
-st.write("Clean deployment build online.")
+st.title("AURA V3 Hybrid Dashboard")
+
+st.write("Core + Swing + Tactical intelligence dashboard")

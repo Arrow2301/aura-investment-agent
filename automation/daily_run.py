@@ -1,24 +1,15 @@
 from market.universe import SYMBOLS
-from market.downloader import download
-from intelligence.scorer import score
-from core.database import insert
+from market.data import get_data
+from intelligence.technical import technical_score
+from intelligence.decision import decide
 
 def run():
     for symbol in SYMBOLS:
-        data=download(symbol)
-        if data is not None and len(data)>200:
-            s=score(data)
-            insert("stock_analysis", {
-                "symbol":symbol,
-                "technical_score":s,
-                "fundamental_score":0,
-                "sentiment_score":0,
-                "overall_score":s,
-                "action":"WATCH",
-                "confidence":50,
-                "reason":"Technical scan"
-            })
-            print(symbol,s)
+        data=get_data(symbol)
+        if data is not None:
+            tech=technical_score(data)
+            decision=decide(tech)
+            print(symbol, decision)
 
 if __name__=="__main__":
     run()

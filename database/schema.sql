@@ -9,53 +9,43 @@ CREATE TABLE IF NOT EXISTS market_prices(
  volume BIGINT
 );
 
-CREATE TABLE IF NOT EXISTS stock_analysis(
+CREATE TABLE IF NOT EXISTS analysis_results(
  id BIGSERIAL PRIMARY KEY,
  symbol TEXT,
- date DATE,
+ date DATE DEFAULT CURRENT_DATE,
  technical_score NUMERIC,
  fundamental_score NUMERIC,
  sentiment_score NUMERIC,
  overall_score NUMERIC,
+ strategy TEXT,
  action TEXT,
  confidence NUMERIC,
- reason TEXT,
- risk_notes TEXT,
- created_at TIMESTAMP DEFAULT NOW()
+ reason TEXT
 );
 
-CREATE TABLE IF NOT EXISTS portfolio(
+CREATE TABLE IF NOT EXISTS paper_positions(
  id BIGSERIAL PRIMARY KEY,
+ portfolio_type TEXT,
  symbol TEXT,
  quantity INTEGER,
  entry_price NUMERIC,
  current_price NUMERIC,
- profit_loss NUMERIC,
- status TEXT
+ pnl NUMERIC
 );
 
 CREATE TABLE IF NOT EXISTS trades(
  id BIGSERIAL PRIMARY KEY,
+ portfolio_type TEXT,
  symbol TEXT,
  action TEXT,
  quantity INTEGER,
  price NUMERIC,
- reason TEXT,
- created_at TIMESTAMP DEFAULT NOW()
+ reason TEXT
 );
 
 CREATE TABLE IF NOT EXISTS learning_memory(
  id BIGSERIAL PRIMARY KEY,
  prediction TEXT,
- result TEXT,
- lesson TEXT,
- created_at TIMESTAMP DEFAULT NOW()
-);
-
-CREATE TABLE IF NOT EXISTS system_logs(
- id BIGSERIAL PRIMARY KEY,
- module TEXT,
- message TEXT,
- severity TEXT,
- created_at TIMESTAMP DEFAULT NOW()
+ outcome TEXT,
+ lesson TEXT
 );
