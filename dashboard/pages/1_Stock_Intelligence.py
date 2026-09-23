@@ -25,7 +25,7 @@ supabase = get_client()
 
 data = (
     supabase
-    .table("signals")
+    .table("stock_analysis")
     .select("*")
     .order(
         "created_at",
@@ -39,57 +39,78 @@ data = (
 df = pd.DataFrame(data)
 
 
-stock = st.selectbox(
+if df.empty:
+
+    st.warning(
+        "No analysis available. Run daily pipeline."
+    )
+
+    st.stop()
+
+
+
+symbol = st.selectbox(
     "Select Stock",
     df["symbol"].unique()
 )
 
 
-row = df[
-    df["symbol"] == stock
+stock = df[
+    df["symbol"] == symbol
 ].iloc[0]
 
 
-c1,c2,c3 = st.columns(3)
+
+c1,c2,c3,c4 = st.columns(4)
 
 
 with c1:
     st.metric(
         "AURA Score",
-        row["aura_score"]
+        stock["aura_score"]
     )
 
 with c2:
     st.metric(
         "Action",
-        row["action"]
+        stock["action"]
     )
 
 with c3:
     st.metric(
         "Confidence",
-        f"{row['confidence']}%"
+        f"{stock['confidence']}%"
+    )
+
+with c4:
+    st.metric(
+        "Price",
+        stock["current_price"]
     )
 
 
+
+st.divider()
+
+
 st.subheader(
-    "Component Scores"
+    "Score Breakdown"
 )
 
 
 scores = {
 
 "Technical":
-row["technical_score"],
+stock["technical_score"],
 
 "Fundamental":
-row["fundamental_score"],
+stock["fundamental_score"],
 
 "Quality":
-row["quality_score"],
+stock["quality_score"],
 
 "Risk":
-row["risk_score"]
+stock["risk_score"]
 
 }
 
@@ -97,25 +118,34 @@ row["risk_score"]
 st.bar_chart(scores)
 
 
+
 st.subheader(
-    "AURA Analysis"
+    "Technical Signals"
 )
 
 
-if row["aura_score"] >= 80:
+for x in stock["technical_signals"]:
 
-    st.success(
-        "Strong AURA signal."
-    )
+    st.success(x)
 
-elif row["aura_score"] >= 65:
 
-    st.warning(
-        "Watch candidate."
-    )
 
-else:
+st.subheader(
+    "Fundamental Signals"
+)
 
-    st.error(
-        "Weak signal."
-    )
+
+for x in stock["fundamental_signals"]:
+
+    st.success(x)
+
+
+
+st.subheader(
+    "AURA Investment Thesis"
+)
+
+
+st.info(
+    stock["explanation"]
+)
