@@ -6,3 +6,4 @@ streamlit
 scikit-learn
 python-dotenv
 pytest
+supabase

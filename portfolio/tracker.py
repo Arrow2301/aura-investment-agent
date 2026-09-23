@@ -3,5 +3,5 @@ class Portfolio:
         self.cash=cash
         self.positions={}
 
-    def buy(self,symbol,qty):
+    def add(self,symbol,qty):
         self.positions[symbol]=qty

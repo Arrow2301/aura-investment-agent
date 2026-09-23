@@ -1,17 +1,10 @@
-# AURA Final Production Edition
+# AURA V6 Production Build
 
-Integrated research and paper-trading platform.
+Integrated paper-trading intelligence platform.
+
+Pipeline:
+Market Data -> Intelligence -> Risk -> Portfolio -> Database -> Dashboard -> Learning
 
 Run:
 pip install -r requirements.txt
 python automation/daily_run.py
-
-Modules:
-- real market data
-- technical analysis
-- scoring
-- risk
-- portfolio tracking
-- backtesting foundation
-- learning memory
-- dashboard foundation
