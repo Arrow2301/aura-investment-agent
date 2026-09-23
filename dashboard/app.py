@@ -1,2 +1,5 @@
 import streamlit as st
-st.title('AURA Final Intelligence Dashboard')
+from data_engine.universe import SYMBOLS
+st.title('AURA Investment Intelligence')
+st.write('Live market scanner')
+for s in SYMBOLS: st.write(s)
