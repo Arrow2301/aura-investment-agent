@@ -1,12 +1,15 @@
-# AURA V10 Intelligence Command
+# AURA Final Build
 
-Upgrade layer focused on:
-- Live multi-factor scoring
-- Explainable signals
-- Memory and learning
-- Portfolio intelligence
+Integrated paper-trading intelligence platform.
+
+Modules:
+- Market data ingestion
+- Multi-factor intelligence
+- Explainable scoring
+- Paper portfolio engine
 - Backtesting framework
-- Dashboard command center
+- Learning memory
+- Dashboard foundation
+- Daily automation
 
-Default mode:
-PAPER TRADING
+This version is designed as a research and paper-trading system.

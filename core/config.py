@@ -1,2 +1,12 @@
-MODE='PAPER'
-CAPITAL=1000000
+UNIVERSE = [
+    "RELIANCE.NS",
+    "TCS.NS",
+    "INFY.NS",
+    "HDFCBANK.NS",
+    "ICICIBANK.NS",
+    "SBIN.NS",
+    "ITC.NS",
+    "LT.NS",
+    "BEL.NS",
+    "HAL.NS"
+]
