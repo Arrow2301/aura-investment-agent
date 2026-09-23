@@ -1,22 +1,11 @@
-# AURA V6+ Complete
+# AURA V6.1 Intelligence Expansion
 
-Hybrid investment research and paper trading platform.
+Upgrade layer for AURA V6+.
 
-Features:
-- Market data pipeline
-- Technical intelligence
-- Fundamental framework
-- Sentiment framework
-- Market regime
-- Decision engine
-- Core/Swing/Tactical paper portfolios
-- Risk management
-- Learning memory
-- Dashboard foundation
-- Cloud automation
-
-Deployment:
-GitHub Actions + Supabase + Streamlit
-
-Default:
-Paper trading mode enabled.
+Adds:
+- Expanded intelligence framework
+- Backtesting foundation
+- Portfolio analytics foundation
+- Better data validation
+- AI report structure
+- Performance tracking

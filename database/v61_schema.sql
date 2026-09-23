@@ -1,0 +1,13 @@
+CREATE TABLE IF NOT EXISTS performance(
+id BIGSERIAL PRIMARY KEY,
+date DATE,
+portfolio_value NUMERIC,
+pnl NUMERIC,
+drawdown NUMERIC
+);
+
+CREATE TABLE IF NOT EXISTS ai_reports(
+id BIGSERIAL PRIMARY KEY,
+report TEXT,
+created_at TIMESTAMP DEFAULT NOW()
+);
