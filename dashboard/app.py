@@ -1,8 +1,15 @@
 import streamlit as st
 
-st.title("AURA V6 Command Center")
-st.write("Market Scanner")
-st.write("Portfolio")
-st.write("Risk")
-st.write("Backtesting")
-st.write("Learning")
+st.title("AURA V6.1 Command Center")
+
+sections=[
+"Market Scanner",
+"Signals",
+"Portfolio",
+"Risk",
+"Backtesting",
+"Learning"
+]
+
+for s in sections:
+    st.write(s)

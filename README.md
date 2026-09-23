@@ -1,9 +1,14 @@
-# AURA V6 Production Build
+# AURA V6.1 Complete
 
-Integrated paper-trading intelligence platform.
+Production hardening upgrade over V6.
 
-Pipeline:
-Market Data -> Intelligence -> Risk -> Portfolio -> Database -> Dashboard -> Learning
+Added:
+- improved scoring framework
+- confidence calculation
+- portfolio simulation foundation
+- backtesting metrics foundation
+- database persistence hooks
+- dashboard expansion foundation
 
 Run:
 pip install -r requirements.txt

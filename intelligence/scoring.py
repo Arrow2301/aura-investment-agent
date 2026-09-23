@@ -1,5 +1,5 @@
 def calculate(features):
-    weights={
+    weights = {
         "technical":0.25,
         "fundamental":0.25,
         "quality":0.20,
@@ -7,15 +7,19 @@ def calculate(features):
         "valuation":0.15
     }
 
-    total=sum(features.get(k,0)*w for k,w in weights.items())
+    score=sum(features.get(k,0)*v for k,v in weights.items())
 
-    action="AVOID"
-    if total>=75:
+    confidence=min(0.95, max(0.50, score/100))
+
+    if score >= 75:
         action="BUY_CANDIDATE"
-    elif total>=50:
+    elif score >= 50:
         action="WATCH"
+    else:
+        action="AVOID"
 
     return {
-        "score":round(total,2),
+        "score":round(score,2),
+        "confidence":round(confidence,2),
         "action":action
     }

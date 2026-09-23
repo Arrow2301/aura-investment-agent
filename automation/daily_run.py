@@ -1,21 +1,20 @@
-from config.settings import UNIVERSE
+from data.universe import SYMBOLS
 from data.market import get_market_data
-from data.fundamentals import get_fundamentals
-from intelligence.technical import analyze
+from intelligence.technical import analyze as technical
+from intelligence.fundamentals import analyze as fundamental
 from intelligence.scoring import calculate
 
 def run():
-    for symbol in UNIVERSE:
+    for symbol in SYMBOLS:
         df=get_market_data(symbol)
-        tech=analyze(df)
-        fund=get_fundamentals(symbol)
+
+        tech=technical(df)
+        fund=fundamental()
 
         result=calculate({
             "technical":tech["score"],
-            "fundamental":fund["quality"],
-            "quality":fund["quality"],
-            "risk":70,
-            "valuation":fund["valuation"]
+            **fund,
+            "risk":70
         })
 
         print(symbol,result)
