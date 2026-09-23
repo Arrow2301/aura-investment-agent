@@ -17,7 +17,10 @@ from intelligence.quality_engine import analyze as quality_analyze
 from intelligence.risk_engine import analyze as risk_analyze
 from intelligence.decision_brain import calculate_aura_score
 
-from database.supabase_client import save_signal
+from database.supabase_client import (
+    save_signal,
+    save_analysis
+)
 
 
 def run():
@@ -53,21 +56,37 @@ def run():
                 quality,
                 risk
             )
-
             result = {
+            
                 "symbol": symbol,
+            
+                "current_price":
+                    float(
+                        history["Close"].iloc[-1]
+                    ),
+            
                 "technical": technical,
+            
                 "fundamental": fundamental,
+            
                 "quality": quality,
+            
                 "risk": risk,
-                "aura": aura
+            
+                "aura": aura,
+            
+                "explanation":
+                    f"{symbol} has an AURA score of {aura['aura_score']} with action {aura['action']}."
+            
             }
+
 
             print(result)
 
             results.append(result)
 
             save_signal(result)
+            save_analysis(result)
 
 
         except Exception as e:
