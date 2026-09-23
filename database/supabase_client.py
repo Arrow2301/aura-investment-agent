@@ -1,4 +1,74 @@
-import os
+def save_analysis(result):
+
+    supabase = get_client()
+
+
+    data = {
+
+        "symbol": result["symbol"],
+
+        "current_price":
+            result.get("current_price", 0),
+
+        "technical_score":
+            result["technical"]["score"],
+
+        "fundamental_score":
+            result["fundamental"]["score"],
+
+        "quality_score":
+            result["quality"]["score"],
+
+        "risk_score":
+            result["risk"]["score"],
+
+        "technical_signals":
+            result["technical"].get(
+                "signals",
+                []
+            ),
+
+        "fundamental_signals":
+            result["fundamental"].get(
+                "signals",
+                []
+            ),
+
+        "quality_signals":
+            result["quality"].get(
+                "signals",
+                []
+            ),
+
+        "risk_notes":
+            result["risk"].get(
+                "risk",
+                ""
+            ),
+
+        "aura_score":
+            result["aura"]["aura_score"],
+
+        "action":
+            result["aura"]["action"],
+
+        "confidence":
+            result["aura"]["confidence"],
+
+        "explanation":
+            result.get(
+                "explanation",
+                ""
+            )
+    }
+
+
+    return (
+        supabase
+        .table("stock_analysis")
+        .insert(data)
+        .execute()
+    )import os
 from supabase import create_client
 
 
