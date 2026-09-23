@@ -1,4 +1,4 @@
 import yfinance as yf
 
-def get_data(symbol):
-    return yf.download(symbol, period="1y")
+def download(symbol, period="1y"):
+    return yf.download(symbol, period=period, auto_adjust=True)

@@ -1,19 +1,22 @@
+from data.universe import SYMBOLS
+from data.market_data import download
+from intelligence.technical import analyze
 from intelligence.scoring import calculate
-from intelligence.explainer import explain
 
 def run():
-    features={
-        "technical":70,
-        "momentum":65,
-        "quality":60,
-        "risk":75,
-        "regime":65
-    }
+    for symbol in SYMBOLS:
+        df=download(symbol)
 
-    result=calculate(features)
+        if df.empty:
+            continue
 
-    print(result)
-    print(explain(features))
+        tech=analyze(df)
+
+        result=calculate({
+            "technical":tech["technical"]
+        })
+
+        print(symbol,result)
 
 if __name__=="__main__":
     run()

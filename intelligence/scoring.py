@@ -1,21 +1,13 @@
-def score(features):
-    weights={
-        "technical":0.30,
-        "momentum":0.20,
-        "fundamental":0.20,
-        "risk":0.15,
-        "regime":0.15
-    }
-
-    value=sum(features.get(k,0)*v for k,v in weights.items())
+def calculate(features):
+    score=sum(features.values())/len(features)
 
     action="AVOID"
-    if value>=75:
+    if score >= 75:
         action="BUY_CANDIDATE"
-    elif value>=50:
+    elif score >= 50:
         action="WATCH"
 
     return {
-        "score":round(value,2),
+        "score":round(score,2),
         "action":action
     }

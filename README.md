@@ -1,15 +1,17 @@
-# AURA Final Build
+# AURA Final Production Edition
 
-Integrated paper-trading intelligence platform.
+Integrated research and paper-trading platform.
+
+Run:
+pip install -r requirements.txt
+python automation/daily_run.py
 
 Modules:
-- Market data ingestion
-- Multi-factor intelligence
-- Explainable scoring
-- Paper portfolio engine
-- Backtesting framework
-- Learning memory
-- Dashboard foundation
-- Daily automation
-
-This version is designed as a research and paper-trading system.
+- real market data
+- technical analysis
+- scoring
+- risk
+- portfolio tracking
+- backtesting foundation
+- learning memory
+- dashboard foundation

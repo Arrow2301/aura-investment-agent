@@ -1,13 +1,7 @@
-CREATE TABLE IF NOT EXISTS signals(
+CREATE TABLE signals(
 id BIGSERIAL PRIMARY KEY,
 symbol TEXT,
 score NUMERIC,
 action TEXT,
 created_at TIMESTAMP DEFAULT NOW()
-);
-
-CREATE TABLE IF NOT EXISTS learning_memory(
-id BIGSERIAL PRIMARY KEY,
-prediction TEXT,
-outcome TEXT
 );

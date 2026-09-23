@@ -1,9 +1,6 @@
 class Memory:
     def __init__(self):
-        self.history=[]
+        self.records=[]
 
     def add(self,item):
-        self.history.append(item)
-
-    def size(self):
-        return len(self.history)
+        self.records.append(item)
