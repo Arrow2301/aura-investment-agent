@@ -1,5 +1,6 @@
-def record(prediction, outcome):
+def store(prediction,outcome,lesson):
     return {
-        "prediction": prediction,
-        "outcome": outcome
+        "prediction":prediction,
+        "outcome":outcome,
+        "lesson":lesson
     }

@@ -1,21 +1,20 @@
-# AURA V3 Hybrid Autonomous Investment System
+# AURA V5 FULL
 
-Hybrid research and paper trading platform.
+Hybrid autonomous investment research and paper trading platform.
 
-Modes:
-- Core portfolio (long term)
-- Swing portfolio
-- Tactical portfolio
-
-Features:
-- Technical intelligence
-- Fundamental scoring framework
-- Sentiment/AI layer interface
-- Risk management
-- Paper trading
+Architecture:
+- Market data layer
+- Universe manager
+- Technical analysis
+- Fundamental analysis framework
+- Decision engine
+- Core/Swing/Tactical paper portfolios
 - Learning memory
-- Dashboard foundation
+- Dashboard
 - Cloud automation
 
 Deployment:
 GitHub Actions + Supabase + Streamlit
+
+Important:
+This system is for research and paper trading. It does not guarantee profits.

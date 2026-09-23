@@ -1,8 +1,9 @@
 pandas
 numpy
 yfinance
-python-dotenv
 supabase
+python-dotenv
 streamlit
 plotly
 ta
+scikit-learn
