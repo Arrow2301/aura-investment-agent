@@ -1,17 +1,50 @@
 name: AURA Daily Run
 
 on:
+
   schedule:
     - cron: '00 1 * * *'
+
   workflow_dispatch:
 
+
 jobs:
+
   aura:
+
     runs-on: ubuntu-latest
+
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+
         with:
-          python-version: '3.11'
-      - run: pip install -r requirements.txt
-      - run: python automation/daily_run.py
+          python-version: "3.11"
+
+
+      - name: Install packages
+        run:
+
+          pip install -r requirements.txt
+
+
+      - name: Run AURA
+
+        env:
+
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+
+
+        run:
+
+          python automation/daily_run.py
