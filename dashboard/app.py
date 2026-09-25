@@ -56,6 +56,7 @@ with st.sidebar:
     st.page_link('pages/2_Portfolio.py', label='Paper portfolio', icon='💼')
     st.page_link('pages/3_Backtesting.py', label='Historical backtest', icon='📈')
     st.page_link('pages/4_AI_Reports.py', label='Research brief', icon='📝')
+    st.page_link('pages/5_Strategy_Performance.py', label='Strategy performance', icon='📊')
     st.caption('Closing prices are not live quotes. Scores are not probabilities.')
 
 if not rows:
@@ -83,14 +84,15 @@ tab_scan, tab_stock, tab_history = st.tabs(['📊 Market scan', '🔎 Stock deta
 
 with tab_scan:
     counts = selected['action'].value_counts()
-    a, b, c, d = st.columns(4)
+    a, b, c, d, e = st.columns(5)
     a.metric('Stocks scanned', len(selected))
     b.metric('Buy candidates', int(counts.get('BUY_CANDIDATE', 0)))
     c.metric('Watch', int(counts.get('WATCH', 0)))
-    d.metric('Avoid', int(counts.get('AVOID', 0)))
+    d.metric('Exit candidates', int(counts.get('EXIT_CANDIDATE', 0)))
+    e.metric('Avoid', int(counts.get('AVOID', 0)))
     st.caption('A buy candidate is a research flag subject to its displayed risk setup.')
     left, right, search_col = st.columns([1, 1, 1.5])
-    action = left.selectbox('Action', ['All', 'BUY_CANDIDATE', 'WATCH', 'AVOID'])
+    action = left.selectbox('Action', ['All', 'BUY_CANDIDATE', 'WATCH', 'EXIT_CANDIDATE', 'AVOID'])
     minimum = right.slider('Minimum AURA score', 0, 100, 0)
     query = search_col.text_input('Find ticker', placeholder='e.g. TCS')
     filtered = selected[selected['aura_score'].fillna(0) >= minimum]
@@ -169,7 +171,8 @@ with tab_history:
         history = count_by_date.tail(40).rename_axis('Market date').reset_index().melt(
             id_vars='Market date', var_name='Action', value_name='Stocks')
         fig = px.bar(history, x='Market date', y='Stocks', color='Action', barmode='stack',
-                     color_discrete_map={'BUY_CANDIDATE': '#35aa8d', 'WATCH': '#dda54a', 'AVOID': '#a0a6b1'})
+                     color_discrete_map={'BUY_CANDIDATE': '#35aa8d', 'WATCH': '#dda54a',
+                                         'EXIT_CANDIDATE': '#d97878', 'AVOID': '#a0a6b1'})
         fig.update_layout(legend_title_text='Action', margin=dict(l=0, r=0, t=12, b=0))
         st.plotly_chart(fig, use_container_width=True)
     st.markdown('#### Measured outcomes')

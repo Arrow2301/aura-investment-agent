@@ -1,18 +1,18 @@
-name: AURA end-of-day scan
+name: AURA daily research and alerts
 on:
   workflow_dispatch:
   schedule:
-    # 11:30 UTC = 17:00 IST, after NSE closes. Actions may start late.
-    - cron: '30 11 * * 1-5'
+    # 11:42 UTC = 17:12 IST, after NSE closes; GitHub may run late.
+    - cron: '42 11 * * 1-5'
 permissions:
   contents: read
 concurrency:
-  group: aura-daily-scan
+  group: aura-automation
   cancel-in-progress: false
 jobs:
   aura:
     runs-on: ubuntu-latest
-    timeout-minutes: 40
+    timeout-minutes: 90
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -23,7 +23,30 @@ jobs:
       - name: Unit tests
         run: python -m unittest discover -s tests -v
       - name: Scan and persist
+        id: scan
+        continue-on-error: true
         run: python -m automation.daily_run
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          AURA_USER_ID: ${{ secrets.AURA_USER_ID }}
+      - name: Daily Telegram recommendations
+        run: python -m automation.notify digest
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          AURA_USER_ID: ${{ secrets.AURA_USER_ID }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      - name: Portfolio exit alerts and daily P&L
+        if: always() && steps.scan.outcome != 'skipped'
+        run: python -m automation.notify positions
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          AURA_USER_ID: ${{ secrets.AURA_USER_ID }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      - name: Report incomplete scan
+        if: steps.scan.outcome == 'failure'
+        run: exit 1

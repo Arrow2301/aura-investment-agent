@@ -24,9 +24,9 @@ def get_client(write=False):
 
 
 
-def save_signal(result):
+def save_signal(result, client=None):
 
-    supabase = get_client(write=True)
+    supabase = client if client is not None else get_client(write=True)
 
     aura = result["aura"]
 
@@ -62,6 +62,8 @@ def save_signal(result):
         "explanation": {
             "signals": result["technical"].get("signals", []),
             "strategies": result["technical"].get("strategies", {}),
+            "exit": result.get("exit_setup", {}),
+            "fundamental_data_available": result.get("fundamental_data_available", False),
             "decision": result.get("explanation", "")
         },
 
@@ -79,9 +81,9 @@ def save_signal(result):
 
 
 
-def save_analysis(result):
+def save_analysis(result, client=None):
 
-    supabase = get_client(write=True)
+    supabase = client if client is not None else get_client(write=True)
 
     aura = result["aura"]
 

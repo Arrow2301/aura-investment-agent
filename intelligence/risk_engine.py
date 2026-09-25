@@ -1,4 +1,4 @@
-"""Risk and reward levels derived from observed prices; targets are never inflated."""
+"""Risk estimates from prior price levels or a labelled ATR breakout projection."""
 
 import pandas as pd
 
@@ -18,8 +18,12 @@ def analyze(df: pd.DataFrame, minimum_reward_risk: float = 1.5) -> dict:
     if pd.isna(atr) or pd.isna(entry) or atr <= 0 or entry <= 0:
         return {"score": 0, "risk": "UNKNOWN", "eligible": False, "reason": "Invalid price or volatility data"}
 
-    stop = max(float(support), float(entry - 2 * atr))
-    target = float(resistance)  # observed resistance only; do not manufacture a qualifying target
+    stop = max(float(support), float(entry - 1.5 * atr))
+    # A breakout has no overhead resistance in the lookback window. Use a
+    # predeclared 3-ATR projection, explicitly labelled as a model estimate.
+    breakout = float(entry) > float(resistance)
+    target = float(entry + 3 * atr) if breakout else float(resistance)
+    basis = '3-ATR projection after breakout' if breakout else 'prior 20-session resistance'
     risk_amount, reward_amount = float(entry - stop), float(target - entry)
     ratio = reward_amount / risk_amount if risk_amount > 0 and reward_amount > 0 else 0.0
     eligible = ratio >= minimum_reward_risk
@@ -28,7 +32,8 @@ def analyze(df: pd.DataFrame, minimum_reward_risk: float = 1.5) -> dict:
         "score": round(max(0, min(100, 80 - risk_pct * 5 + (10 if eligible else -20))), 2),
         "risk": "LOW" if risk_pct <= 3 else "MEDIUM" if risk_pct <= 6 else "HIGH",
         "entry": round(float(entry), 2), "stop": round(stop, 2), "target": round(target, 2),
+        "target_basis": basis,
         "risk_pct": round(risk_pct, 2), "reward_pct": round(max(0, reward_amount / float(entry) * 100), 2),
         "reward_risk": round(ratio, 2), "eligible": eligible,
-        "reason": f"Observed reward/risk {ratio:.2f} is {'acceptable' if eligible else 'below'} the {minimum_reward_risk:.2f} minimum",
+        "reason": f"{basis}: estimated reward/risk {ratio:.2f} is {'at or above' if eligible else 'below'} the {minimum_reward_risk:.2f} minimum",
     }

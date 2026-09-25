@@ -31,6 +31,7 @@ def run(data: pd.DataFrame, signals: pd.Series, stop_pct=0.05, target_pct=0.10,
     aligned = signals.reindex(frame.index).fillna("HOLD").astype(str).str.upper()
     cost = (fee_bps + slippage_bps) / 10_000
     trades, position, equity = [], None, float(initial_capital)
+    daily_curve = [equity]
 
     for i in range(1, len(frame)):
         previous_signal = aligned.iloc[i - 1]
@@ -39,6 +40,7 @@ def run(data: pd.DataFrame, signals: pd.Series, stop_pct=0.05, target_pct=0.10,
             entry = float(bar["Open"]) * (1 + cost)
             position = {"signal_time": frame.index[i - 1], "entry_time": frame.index[i], "entry": entry}
         if position is None:
+            daily_curve.append(equity)
             continue
 
         stop, target = position["entry"] * (1 - stop_pct), position["entry"] * (1 + target_pct)
@@ -59,31 +61,30 @@ def run(data: pd.DataFrame, signals: pd.Series, stop_pct=0.05, target_pct=0.10,
                                 round(position["entry"], 4), round(exit_price, 4),
                                 round(trade_return * 100, 4), reason))
             position = None
+        daily_curve.append(equity * float(bar['Close']) / position['entry'] if position else equity)
 
-    if position is not None:  # mark the remaining paper position to the last close
-        exit_price = float(frame["Close"].iloc[-1]) * (1 - cost)
-        trade_return = exit_price / position["entry"] - 1
-        equity *= 1 + trade_return
-        trades.append(Trade(position["signal_time"], position["entry_time"], frame.index[-1],
-                            round(position["entry"], 4), round(exit_price, 4),
-                            round(trade_return * 100, 4), "end_of_data"))
+    open_position = None
+    if position is not None:
+        open_position = {'entry_time': position['entry_time'], 'entry_price': position['entry'],
+                         'last_close': float(frame['Close'].iloc[-1])}
+        equity = daily_curve[-1]  # mark the open trade; it is not counted as a realized win
 
     records = [asdict(t) for t in trades]
-    result = {"trades": records, "metrics": _metrics(records, initial_capital, equity)}
+    result = {"trades": records, "open_position": open_position,
+              "metrics": _metrics(records, initial_capital, equity, daily_curve)}
     if len(frame) > 1:
         result["benchmark_return_pct"] = round((float(frame["Close"].iloc[-1]) / float(frame["Open"].iloc[0]) - 1) * 100, 2)
     return result
 
 
-def _metrics(trades, initial, final):
+def _metrics(trades, initial, final, daily_curve=None):
     returns = [t["return_pct"] / 100 for t in trades]
     wins = [value for value in returns if value > 0]
     losses = [value for value in returns if value < 0]
-    curve, peak, max_drawdown = initial, initial, 0.0
-    for value in returns:
-        curve *= 1 + value
-        peak = max(peak, curve)
-        max_drawdown = min(max_drawdown, curve / peak - 1)
+    peak, max_drawdown = initial, 0.0
+    for value in daily_curve or [initial, final]:
+        peak = max(peak, value)
+        max_drawdown = min(max_drawdown, value / peak - 1)
     return {
         "trade_count": len(trades), "win_rate_pct": round(100 * len(wins) / len(trades), 2) if trades else 0,
         "return_pct": round((final / initial - 1) * 100, 2),

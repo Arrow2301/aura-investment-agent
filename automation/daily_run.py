@@ -1,5 +1,6 @@
 """Scheduled end-of-day research scan; fails visibly on missing persistence."""
 import logging
+import os
 import sys
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -15,7 +16,9 @@ from intelligence.fundamental_engine import analyze as fundamental_analyze
 from intelligence.quality_engine import analyze as quality_analyze
 from intelligence.risk_engine import analyze as risk_analyze
 from intelligence.decision_brain import calculate_aura_score
+from intelligence.exit_engine import analyze as exit_analyze
 from database.supabase_client import get_client, save_signal, save_analysis
+from portfolio.ledger import summarize
 
 LOG = logging.getLogger(__name__)
 IST = timezone(timedelta(hours=5, minutes=30))
@@ -34,19 +37,27 @@ def analyze_symbol(symbol, now=None):
     if (now.date() - market_date).days > 5:
         raise ValueError(f'Stale market bar: {market_date}')
     technical = technical_analyze(history)
-    fundamentals = get_fundamentals(symbol)
+    try:
+        fundamentals = get_fundamentals(symbol)
+    except Exception as exc:
+        LOG.warning('%s fundamentals unavailable; suppressing buy eligibility: %s', symbol, exc)
+        fundamentals = {}
     fundamental = fundamental_analyze(fundamentals)
     quality = quality_analyze(fundamentals)
     risk = risk_analyze(history)
     aura = calculate_aura_score(technical, fundamental, quality, risk)
+    exit_setup = exit_analyze(history)
+    if exit_setup['exit']:
+        aura['action'] = 'EXIT_CANDIDATE'
     return {
         'symbol': symbol, 'analysis_date': market_date.isoformat(),
         'market_date': market_date.isoformat(),
         'current_price': float(history['Close'].iloc[-1]),
         'technical': technical, 'fundamental': fundamental,
-        'quality': quality, 'risk': risk, 'aura': aura,
+        'quality': quality, 'risk': risk, 'aura': aura, 'exit_setup': exit_setup,
+        'fundamental_data_available': fundamental['valid'],
         'explanation': (
-            f"AURA {aura['aura_score']}: {aura['action']}. "
+            f"AURA {aura['aura_score']}: {aura['action']}. {exit_setup['reason']}. "
             f"{risk.get('reason', 'Risk/reward unavailable')}. "
             f"Technical: {', '.join(technical.get('signals', []))}. "
             f"Fundamental coverage: {fundamental['coverage']}/4; "
@@ -56,8 +67,16 @@ def analyze_symbol(symbol, now=None):
 
 
 def run(symbols=None):
-    symbols = list(SYMBOLS if symbols is None else symbols)
     client = get_client(write=True)  # Preflight before accepting a successful run.
+    if symbols is None:
+        symbols = list(SYMBOLS)
+        owner = os.getenv('AURA_USER_ID')
+        if owner:
+            trades = client.table('paper_trades').select('*').eq('user_id', owner).order('traded_at').limit(1000).execute().data or []
+            if len(trades) == 1000:
+                raise RuntimeError('Trade journal exceeded 1,000 rows; cannot safely load held symbols')
+            symbols += [s for s,p in summarize(trades).items() if p['quantity'] > 0]
+    symbols = list(dict.fromkeys(symbols))
     run_id = str(uuid4())
     client.table('scan_runs').insert({'id': run_id, 'status': 'RUNNING',
                                       'universe_count': len(symbols)}).execute()
@@ -65,8 +84,8 @@ def run(symbols=None):
     for symbol in symbols:
         try:
             result = analyze_symbol(symbol)
-            save_signal(result)
-            save_analysis(result)
+            save_signal(result, client=client)
+            save_analysis(result, client=client)
             successes += 1
             LOG.info('%s %s %s', symbol, result['market_date'], result['aura']['action'])
         except Exception as exc:

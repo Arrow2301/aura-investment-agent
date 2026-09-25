@@ -1,16 +1,16 @@
-name: AURA forward outcomes
+name: AURA weekly held-out backtests
 on:
   workflow_dispatch:
   schedule:
-    # Weekdays, 18:00 IST, after the end-of-day scan.
-    - cron: '30 12 * * 1-5'
+    # Sunday 15:05 IST; no live trades or parameter changes.
+    - cron: '35 9 * * 0'
 permissions:
   contents: read
 concurrency:
   group: aura-automation
   cancel-in-progress: false
 jobs:
-  outcomes:
+  backtests:
     runs-on: ubuntu-latest
     timeout-minutes: 90
     steps:
@@ -20,7 +20,7 @@ jobs:
           python-version: '3.11'
           cache: pip
       - run: pip install -r requirements.txt
-      - run: python -m automation.outcomes
+      - run: python -m automation.backtest_run
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
