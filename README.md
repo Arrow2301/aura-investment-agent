@@ -17,14 +17,14 @@ AURA scans a curated 50-stock NSE watchlist plus open paper positions, records e
    | `TELEGRAM_BOT_TOKEN` | Token from BotFather |
    | `TELEGRAM_CHAT_ID` | Your private numeric chat ID |
 
-5. Manually run **AURA daily research and alerts** in GitHub Actions after 4 PM IST on a market day. Expect 50+ signals, a single Telegram digest, and `portfolio_daily` for your account. If one stock fails, a partial digest is still attempted, and the Action finishes failed to draw attention to missing data. Repeat a run safely: sent alert keys are stored to reduce duplicates.
+5. Manually run **AURA verify alert setup**. It checks the required tables and sends one test Telegram message to your configured chat. Then manually run **AURA daily research and alerts** in GitHub Actions after 4 PM IST on a market day. Expect 50+ signals, a single Telegram digest, and `portfolio_daily` for your account. If one stock fails, a partial digest is still attempted, and the Action finishes failed to draw attention to missing data. Repeat a run safely: sent alert keys are stored to reduce duplicates.
 6. Manually run **AURA weekly held-out backtests** once. Check **Strategy performance** on the dashboard. The first week can have insufficient-trade labels. The **AURA forward outcomes** workflow adds 5- and 20-session close-to-close observations after sufficient market sessions.
 
 ## Automatic schedule (India Standard Time)
 
 | When | What happens |
 | --- | --- |
-| Weekdays 11:05 AM and 2:35 PM | Check open paper positions using recent 5-minute vendor quotes; alert on recorded stop/target or prior trend exit. |
+| Weekdays every 30 minutes, 9:45 AM–3:15 PM | Check open paper positions using recent 5-minute vendor quotes; alert on recorded stop/target or prior trend exit. |
 | Weekdays 5:12 PM | Scan completed daily bars; send Telegram entry/exit digest; mark open paper positions; send new exit alerts. |
 | Weekdays 6:00 PM | Fill mature 5- and 20-session outcomes for older signals. |
 | Sunday 3:05 PM | Refresh held-out, next-session technical backtests for the watchlist. |
