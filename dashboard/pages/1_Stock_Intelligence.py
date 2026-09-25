@@ -28,7 +28,7 @@ data = (
     .table("stock_analysis")
     .select("*")
     .order(
-        "created_at",
+        "analysis_date",
         desc=True
     )
     .execute()
@@ -78,8 +78,8 @@ with c2:
 
 with c3:
     st.metric(
-        "Confidence",
-        f"{stock['confidence']}%"
+        "Score proxy",
+        f"{stock['confidence']} / 100"
     )
 
 with c4:

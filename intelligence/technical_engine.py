@@ -9,7 +9,9 @@ def _rsi(close: pd.Series, period: int = 14) -> pd.Series:
     gains = delta.clip(lower=0).ewm(alpha=1 / period, adjust=False).mean()
     losses = -delta.clip(upper=0).ewm(alpha=1 / period, adjust=False).mean()
     relative_strength = gains / losses.replace(0, np.nan)
-    return (100 - (100 / (1 + relative_strength))).fillna(50)
+    value = 100 - (100 / (1 + relative_strength))
+    value = value.mask((losses == 0) & (gains > 0), 100)
+    return value.fillna(50)
 
 
 def analyze(df: pd.DataFrame) -> dict:

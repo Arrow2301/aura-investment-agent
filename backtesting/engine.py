@@ -43,12 +43,14 @@ def run(data: pd.DataFrame, signals: pd.Series, stop_pct=0.05, target_pct=0.10,
 
         stop, target = position["entry"] * (1 - stop_pct), position["entry"] * (1 + target_pct)
         reason, raw_exit = None, None
-        if float(bar["Low"]) <= stop:
+        if previous_signal == "EXIT" and frame.index[i] != position["entry_time"]:
+            reason, raw_exit = "signal", float(bar["Open"])
+        elif float(bar["Open"]) <= stop:
+            reason, raw_exit = "stop_gap", float(bar["Open"])
+        elif float(bar["Low"]) <= stop:
             reason, raw_exit = "stop", stop
         elif float(bar["High"]) >= target:
             reason, raw_exit = "target", target
-        elif previous_signal == "EXIT" and frame.index[i] != position["entry_time"]:
-            reason, raw_exit = "signal", float(bar["Open"])
         if reason:
             exit_price = raw_exit * (1 - cost)
             trade_return = exit_price / position["entry"] - 1

@@ -1,26 +1,32 @@
 import os
 from datetime import date
 
-from supabase import create_client
-
-
-def get_client():
+def get_client(write=False):
 
     url = os.getenv("SUPABASE_URL")
-    key = os.getenv("SUPABASE_KEY")
+    key = os.getenv("SUPABASE_SERVICE_ROLE_KEY") if write else os.getenv("SUPABASE_ANON_KEY") or os.getenv("SUPABASE_KEY")
+
+    if not write and (not url or not key):
+        try:
+            import streamlit as st
+            url = url or st.secrets.get('SUPABASE_URL')
+            key = key or st.secrets.get('SUPABASE_ANON_KEY')
+        except (ImportError, FileNotFoundError, KeyError):
+            pass
 
     if not url or not key:
         raise Exception(
-            "Missing SUPABASE_URL or SUPABASE_KEY"
+            "Missing SUPABASE_URL or matching Supabase key"
         )
 
+    from supabase import create_client
     return create_client(url, key)
 
 
 
 def save_signal(result):
 
-    supabase = get_client()
+    supabase = get_client(write=True)
 
     aura = result["aura"]
 
@@ -49,7 +55,9 @@ def save_signal(result):
         "confidence":
             aura.get("confidence", 0),
 
-        "analysis_date": date.today().isoformat(),
+        "analysis_date": result.get("analysis_date", date.today().isoformat()),
+        "market_date": result.get("market_date"),
+        "price": result.get("current_price"),
 
         "explanation": {
             "signals": result["technical"].get("signals", []),
@@ -73,7 +81,7 @@ def save_signal(result):
 
 def save_analysis(result):
 
-    supabase = get_client()
+    supabase = get_client(write=True)
 
     aura = result["aura"]
 
@@ -159,7 +167,8 @@ def save_analysis(result):
                 ""
             ),
 
-        "analysis_date": date.today().isoformat(),
+        "analysis_date": result.get("analysis_date", date.today().isoformat()),
+        "market_date": result.get("market_date"),
 
         "risk_setup": result.get("risk", {})
     }

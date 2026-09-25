@@ -4,6 +4,7 @@ ALTER TABLE signals ADD COLUMN IF NOT EXISTS explanation JSONB DEFAULT '{}'::jso
 ALTER TABLE signals ADD COLUMN IF NOT EXISTS risk_setup JSONB DEFAULT '{}'::jsonb;
 CREATE UNIQUE INDEX IF NOT EXISTS signals_symbol_analysis_date_idx ON signals(symbol, analysis_date);
 
+CREATE TABLE IF NOT EXISTS stock_analysis (id BIGSERIAL PRIMARY KEY, symbol TEXT NOT NULL, created_at TIMESTAMPTZ DEFAULT NOW());
 ALTER TABLE stock_analysis ADD COLUMN IF NOT EXISTS analysis_date DATE DEFAULT CURRENT_DATE;
 ALTER TABLE stock_analysis ADD COLUMN IF NOT EXISTS risk_setup JSONB DEFAULT '{}'::jsonb;
 CREATE UNIQUE INDEX IF NOT EXISTS stock_analysis_symbol_analysis_date_idx ON stock_analysis(symbol, analysis_date);
@@ -20,5 +21,6 @@ CREATE TABLE IF NOT EXISTS paper_trades (
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 ALTER TABLE paper_trades ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Users manage their own paper trades" ON paper_trades;
 CREATE POLICY "Users manage their own paper trades" ON paper_trades
   FOR ALL USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);

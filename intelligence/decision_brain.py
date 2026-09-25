@@ -34,12 +34,13 @@ def calculate_aura_score(
 
     # A high composite score cannot turn an objectively unattractive setup into
     # a buy candidate. Risk levels are observations, not targets to manipulate.
-    risk_eligible = risk.get("eligible", True)
+    risk_eligible = risk.get("eligible", False)
+    data_valid = technical.get('valid', False) and fundamental.get('valid', False) and quality.get('valid', False)
 
-    if aura_score >= 80 and risk_eligible:
+    if aura_score >= 80 and risk_eligible and data_valid:
         action = "BUY_CANDIDATE"
 
-    elif aura_score >= 65:
+    elif aura_score >= 65 and data_valid:
         action = "WATCH"
 
     else:
@@ -62,5 +63,6 @@ def calculate_aura_score(
             "regime": regime_score,
             "valuation": valuation_score
         },
-        "risk_eligible": risk_eligible
+        "risk_eligible": risk_eligible,
+        "data_valid": data_valid
     }
