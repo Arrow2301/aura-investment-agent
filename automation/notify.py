@@ -127,6 +127,9 @@ def monitor_portfolio(intraday=False):
         raise RuntimeError('Trade journal exceeded 1,000 rows; refusing incomplete portfolio analysis')
     positions = summarize(rows)
     latest = client.table('signals').select('symbol,price,action,analysis_date').order('analysis_date', desc=True).limit(200).execute().data or []
+    if not intraday and (not latest or str(latest[0]['analysis_date']) != now.date().isoformat()):
+        LOG.info('No new completed market session; skipping after-close marks and alerts')
+        return {'open_positions': sum(p['quantity'] > 0 for p in positions.values()), 'skipped': 'stale market date'}
     signals = {r['symbol']: r for r in reversed(latest)}
     open_cost = marked = marked_cost = realized = covered = missing = 0.0
     for symbol, position in positions.items():
@@ -139,6 +142,9 @@ def monitor_portfolio(intraday=False):
             missing += 1
             continue
         date = str(snap['analysis_date'])
+        if not intraday and date != now.date().isoformat():
+            missing += 1
+            continue
         if (now.date() - datetime.fromisoformat(date).date()).days > 5:
             missing += 1
             continue

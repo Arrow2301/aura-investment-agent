@@ -3,7 +3,8 @@ from unittest.mock import MagicMock, patch
 import numpy as np
 import pandas as pd
 
-from automation.notify import digest_text, exit_reason, send_once
+from automation.notify import digest_text, exit_reason, send_once, monitor_portfolio, IST
+from datetime import datetime, timedelta
 from automation.backtest_run import historical_signals, evaluate
 from backtesting.engine import run as simulate
 from intelligence.exit_engine import analyze as exit_analyze
@@ -84,6 +85,24 @@ class AutomationTests(unittest.TestCase):
         self.assertIn('A.NS', message)
         self.assertIn('B.NS', message)
         self.assertIn('Paper research only', message)
+
+    @patch('automation.notify.send_once')
+    @patch('automation.notify.get_client')
+    @patch('automation.notify.credentials')
+    def test_stale_after_close_cannot_alert_or_overwrite_portfolio(self, credentials, get_client, send):
+        credentials.return_value = {'AURA_USER_ID': 'test-id', 'TELEGRAM_BOT_TOKEN': 'token', 'TELEGRAM_CHAT_ID': 'chat'}
+        trades = MagicMock()
+        trades.select.return_value.eq.return_value.order.return_value.limit.return_value.execute.return_value.data = [
+            {'symbol':'A.NS','side':'BUY','quantity':1,'price':100,'traded_at':'2026-09-20'}]
+        signals = MagicMock()
+        yesterday = (datetime.now(IST).date() - timedelta(days=1)).isoformat()
+        signals.select.return_value.order.return_value.limit.return_value.execute.return_value.data = [
+            {'symbol':'A.NS','action':'EXIT_CANDIDATE','price':80,'analysis_date':yesterday}]
+        get_client.return_value.table.side_effect = lambda name: trades if name == 'paper_trades' else signals
+        result = monitor_portfolio(intraday=False)
+        self.assertIn('skipped', result)
+        send.assert_not_called()
+        self.assertNotIn('portfolio_daily', [call.args[0] for call in get_client.return_value.table.call_args_list])
 
     def test_breakout_candidate_is_possible_but_missing_fundamentals_suppress_buy(self):
         close = [100 + i * .1 for i in range(79)] + [112]
