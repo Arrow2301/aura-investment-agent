@@ -17,8 +17,11 @@ class PipelineTests(unittest.TestCase):
         analyze.side_effect = [dict(symbol='A', market_date='2026-09-25', aura={'action': 'WATCH'}),
                                RuntimeError('vendor timeout')]
         client.return_value = MagicMock()
-        with self.assertRaises(RuntimeError):
-            run(['A', 'B'])
+        # The exception is expected; suppress its log so CI output stays clear.
+        with self.assertLogs('automation.daily_run', level='ERROR') as captured:
+            with self.assertRaises(RuntimeError):
+                run(['A', 'B'])
+        self.assertIn('Failed to process B', captured.output[0])
         record = client.return_value.table.return_value.update.call_args.args[0]
         self.assertEqual(record['status'], 'PARTIAL')
         self.assertEqual(record['failure_count'], 1)
