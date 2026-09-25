@@ -1,16 +1,16 @@
-name: AURA end-of-day scan
+name: AURA forward outcomes
 on:
   workflow_dispatch:
   schedule:
-    # 11:30 UTC = 17:00 IST, after NSE closes. Actions may start late.
-    - cron: '30 11 * * 1-5'
+    # Weekdays, 18:00 IST, after the end-of-day scan.
+    - cron: '30 12 * * 1-5'
 permissions:
   contents: read
 concurrency:
-  group: aura-daily-scan
+  group: aura-forward-outcomes
   cancel-in-progress: false
 jobs:
-  aura:
+  outcomes:
     runs-on: ubuntu-latest
     timeout-minutes: 40
     steps:
@@ -20,10 +20,7 @@ jobs:
           python-version: '3.11'
           cache: pip
       - run: pip install -r requirements.txt
-      - name: Unit tests
-        run: python -m unittest discover -s tests -v
-      - name: Scan and persist
-        run: python -m automation.daily_run
+      - run: python -m automation.outcomes
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
