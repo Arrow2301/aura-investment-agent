@@ -77,7 +77,17 @@ if rows:
                         'last_close': close, 'close_date': mark.get('market_date') if mark else None,
                         'unrealized_pnl': item['quantity'] * close - item['cost'] if close is not None else None,
                         'realized_pnl': item['realized_pnl']})
-    st.subheader('Positions and P&L (₹)')
-    st.dataframe(pd.DataFrame(display), use_container_width=True, hide_index=True)
+    positions_frame = pd.DataFrame(display)
+    open_positions = positions_frame[positions_frame['open_shares'] > 1e-9]
+    a, b, c = st.columns(3)
+    a.metric('Open positions', len(open_positions))
+    b.metric('Unrealized P&L at saved closes', f"₹{open_positions['unrealized_pnl'].sum():+,.2f}")
+    c.metric('Realized P&L', f"₹{positions_frame['realized_pnl'].sum():+,.2f}")
+    st.caption('Unrealized P&L omits positions with no saved close; these are not live prices. Fees and taxes are excluded.')
+    st.subheader('Open positions')
+    if open_positions.empty:
+        st.info('No open paper positions.')
+    else:
+        st.dataframe(open_positions, use_container_width=True, hide_index=True)
     st.subheader('Journal')
     st.dataframe(pd.DataFrame(rows).sort_values('traded_at', ascending=False), use_container_width=True, hide_index=True)

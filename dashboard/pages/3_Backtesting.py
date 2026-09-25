@@ -34,9 +34,26 @@ if st.button('Run backtest', type='primary'):
         signals.loc[active & ~active.shift(1, fill_value=False)] = 'BUY'
         signals.loc[~active & active.shift(1, fill_value=False)] = 'EXIT'
         result = run(df, signals, stop_pct=stop, target_pct=target, fee_bps=fee, slippage_bps=slippage)
-        st.write('Results', result['metrics'])
-        st.metric('Same-stock buy and hold (%)', result.get('benchmark_return_pct', '—'))
-        st.dataframe(pd.DataFrame(result['trades']), use_container_width=True, hide_index=True)
+        metrics = result['metrics']
+        a, b, c, d = st.columns(4)
+        a.metric('Strategy return', f"{metrics['return_pct']:+.2f}%")
+        b.metric('Same-stock buy and hold', f"{result.get('benchmark_return_pct', 0):+.2f}%")
+        c.metric('Closed trades', metrics['trade_count'])
+        d.metric('Maximum drawdown', f"{metrics['max_drawdown_pct']:.2f}%")
+        e, f = st.columns(2)
+        e.metric('Win rate', f"{metrics['win_rate_pct']:.1f}%")
+        factor = metrics['profit_factor']
+        f.metric('Profit factor', f"{factor:.2f}" if factor != float('inf') else '∞')
+        trades = pd.DataFrame(result['trades'])
+        if trades.empty:
+            st.info('This strategy generated no completed trades in the selected period.')
+        else:
+            trade_curve = (1 + trades['return_pct'] / 100).cumprod() * 100
+            st.subheader('Equity after each closed trade')
+            st.line_chart(pd.DataFrame({'Starting capital = 100': trade_curve.values},
+                                       index=pd.to_datetime(trades['exit_time'])))
+            st.subheader('Trade journal')
+            st.dataframe(trades, use_container_width=True, hide_index=True)
         st.caption('Single-stock, in-sample simulation. Stops are checked with daily bars; intraday order is unknown. Remaining positions are valued at the last close.')
     except Exception as exc:
         st.error(f'Backtest failed: {exc}')
