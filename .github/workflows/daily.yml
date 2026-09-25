@@ -3,7 +3,8 @@ name: AURA India Production Daily
 on:
   workflow_dispatch:
   schedule:
-    - cron: "00 1 * * *"
+    # GitHub Actions cron is UTC: 01:00 UTC = 06:30 IST (UTC+05:30).
+    - cron: "00 1 * * 1-5"
 
 jobs:
   aura:
@@ -18,4 +19,3 @@ jobs:
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
-
