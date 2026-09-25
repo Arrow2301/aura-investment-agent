@@ -75,8 +75,11 @@ def run():
             
                 "aura": aura,
             
-                "explanation":
-                    f"{symbol} has an AURA score of {aura['aura_score']} with action {aura['action']}."
+                "explanation": (
+                    f"{symbol} has an AURA score of {aura['aura_score']} and action "
+                    f"{aura['action']}. {risk.get('reason', 'Risk/reward unavailable')}. "
+                    f"Confirmed: {', '.join(technical.get('signals', []))}."
+                )
             
             }
 

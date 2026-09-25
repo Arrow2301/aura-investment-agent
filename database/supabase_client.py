@@ -1,4 +1,5 @@
 import os
+from datetime import date
 
 from supabase import create_client
 
@@ -46,7 +47,17 @@ def save_signal(result):
             aura.get("action", "WATCH"),
 
         "confidence":
-            aura.get("confidence", 0)
+            aura.get("confidence", 0),
+
+        "analysis_date": date.today().isoformat(),
+
+        "explanation": {
+            "signals": result["technical"].get("signals", []),
+            "strategies": result["technical"].get("strategies", {}),
+            "decision": result.get("explanation", "")
+        },
+
+        "risk_setup": result.get("risk", {})
 
     }
 
@@ -54,7 +65,7 @@ def save_signal(result):
     return (
         supabase
         .table("signals")
-        .insert(data)
+        .upsert(data, on_conflict="symbol,analysis_date")
         .execute()
     )
 
@@ -146,13 +157,17 @@ def save_analysis(result):
             result.get(
                 "explanation",
                 ""
-            )
+            ),
+
+        "analysis_date": date.today().isoformat(),
+
+        "risk_setup": result.get("risk", {})
     }
 
 
     return (
         supabase
         .table("stock_analysis")
-        .insert(data)
+        .upsert(data, on_conflict="symbol,analysis_date")
         .execute()
     )

@@ -149,3 +149,17 @@ st.subheader(
 st.info(
     stock["explanation"]
 )
+
+
+risk_setup = stock.get("risk_setup") or {}
+if risk_setup:
+    st.subheader("Observed Risk / Reward")
+    r1, r2, r3, r4 = st.columns(4)
+    r1.metric("Entry", risk_setup.get("entry", "—"))
+    r2.metric("Stop", risk_setup.get("stop", "—"))
+    r3.metric("Resistance target", risk_setup.get("target", "—"))
+    r4.metric("Reward / risk", risk_setup.get("reward_risk", "—"))
+    if risk_setup.get("eligible"):
+        st.success(risk_setup.get("reason", "Risk/reward threshold met."))
+    else:
+        st.warning(risk_setup.get("reason", "Setup does not meet the risk/reward threshold."))
